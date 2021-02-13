@@ -1,12 +1,12 @@
 package de.itbirkle.videorenamer.core.mapper;
 
+import de.itbirkle.videorenamer.core.domain.MediaType;
+import de.itbirkle.videorenamer.core.domain.Provider;
+import de.itbirkle.videorenamer.core.domain.Search;
 import de.itbirkle.videorenamer.core.domain.series.Episode;
 import de.itbirkle.videorenamer.core.domain.series.Season;
 import de.itbirkle.videorenamer.core.domain.series.Series;
-import de.itbirkle.videorenamer.core.provider.tmdb.dto.series.SeasonDTO;
-import de.itbirkle.videorenamer.core.provider.tmdb.dto.series.SeasonDTOTestFactory;
-import de.itbirkle.videorenamer.core.provider.tmdb.dto.series.SeriesDTO;
-import de.itbirkle.videorenamer.core.provider.tmdb.dto.series.SeriesDTOTestFactory;
+import de.itbirkle.videorenamer.core.provider.tmdb.dto.series.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,6 +15,27 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TMDBMapperTest {
+
+    @Test
+    void toSearchSeries() {
+        List<SearchSeriesDTO.SearchSeriesResultDTO> searchSeriesResultDTOs = SearchSeriesDTOTestFactory.createSearchSeriesResultDTOs(3);
+
+        Search search = TMDBMapper.toSearchSeries(searchSeriesResultDTOs);
+
+        assertEquals(Provider.TMDB, search.getProvider());
+        assertEquals(MediaType.SERIES, search.getMediaType());
+        assertEquals(3, search.getResults().size());
+
+        List<String> titles = search.getResults().stream().map(Search.SearchResult::getTitle).collect(Collectors.toList());
+        List<String> descriptions = search.getResults().stream().map(Search.SearchResult::getDescription).collect(Collectors.toList());
+        List<Integer> ids = search.getResults().stream().map(Search.SearchResult::getId).collect(Collectors.toList());
+
+        for (SearchSeriesDTO.SearchSeriesResultDTO searchSeriesResultDTO : searchSeriesResultDTOs) {
+            assertTrue(titles.contains(searchSeriesResultDTO.getName()));
+            assertTrue(descriptions.contains(searchSeriesResultDTO.getOverview()));
+            assertTrue(ids.contains(searchSeriesResultDTO.getId()));
+        }
+    }
 
     @Test
     void toSeries() {
@@ -109,4 +130,5 @@ class TMDBMapperTest {
         assertTrue(seasons.isEmpty());
 
     }
+
 }
