@@ -8,8 +8,11 @@ import lombok.experimental.Accessors;
 public class Episode {
 
     private int episode;
-    private int totalEpisode;
     private String title;
     private String description;
 
+    public Episode() {
+        this.title = "";
+        this.description = "";
+    }
 }

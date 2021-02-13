@@ -3,6 +3,7 @@ package de.itbirkle.videorenamer.core.domain.series;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,4 +18,11 @@ public class Series {
     private List<String> genres;
     private List<Season> seasons;
 
+    public Series() {
+        title = "";
+        description = "";
+        status = "";
+        genres = new ArrayList<>();
+        seasons = new ArrayList<>();
+    }
 }
